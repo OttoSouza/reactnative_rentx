@@ -51,6 +51,7 @@ export const PasswordInput: React.FC<PasswordInputProps> = ({
         secureTextEntry={isPasswordVisible}
         onFocus={handleIsFocus}
         onBlur={handleInputBlur}
+        autoCorrect={false}
       />
 
       <BorderlessButton onPress={handlePasswordVisibilityChange}>

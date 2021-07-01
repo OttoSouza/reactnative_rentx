@@ -28,67 +28,75 @@ import { RectButton, PanGestureHandler } from "react-native-gesture-handler";
 const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
 
 export const Home: React.FC = () => {
-  const theme = useTheme();
+  // const theme = useTheme();
   const { navigate } = useNavigation();
   function handleGoToCarDetails(car: CarDTO) {
     navigate("CarDetails", { car });
   }
-
-  function handleGoToMyCars() {
-    navigate("MyCars");
-  }
-
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const positionInY = useSharedValue(0);
-  const positionInX = useSharedValue(0);
-  const myCarsButtonStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: positionInX.value,
-        },
-        { translateY: positionInY.value },
-      ],
-    };
-  });
+  // function handleGoToMyCars() {
+  //   navigate("MyCars");
+  // }
 
-  const onGestureHandler = useAnimatedGestureHandler({
-    onStart(_, ctx: any) {
-      ctx.positionX = positionInX.value;
-      ctx.positionY = positionInY.value;
-    },
-    onActive(event, ctx: any) {
-      positionInX.value = ctx.positionX + event.translationX;
-      positionInY.value = ctx.positionY + event.translationY;
-    },
-    onEnd(event) {
-      positionInX.value = withSpring(0);
-      positionInY.value = withSpring(0);
-    },
-  });
+  // const positionInY = useSharedValue(0);
+  // const positionInX = useSharedValue(0);
+  // const myCarsButtonStyle = useAnimatedStyle(() => {
+  //   return {
+  //     transform: [
+  //       {
+  //         translateX: positionInX.value,
+  //       },
+  //       { translateY: positionInY.value },
+  //     ],
+  //   };
+  // });
 
-  async function loadCars() {
-    try {
-      const response = await api.get("/cars");
-      setCars(response.data);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+  // const onGestureHandler = useAnimatedGestureHandler({
+  //   onStart(_, ctx: any) {
+  //     ctx.positionX = positionInX.value;
+  //     ctx.positionY = positionInY.value;
+  //   },
+  //   onActive(event, ctx: any) {
+  //     positionInX.value = ctx.positionX + event.translationX;
+  //     positionInY.value = ctx.positionY + event.translationY;
+  //   },
+  //   onEnd(event) {
+  //     positionInX.value = withSpring(0);
+  //     positionInY.value = withSpring(0);
+  //   },
+  // });
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCars() {
+      try {
+        const response = await api.get("/cars");
+        if (isMounted) {
+          setCars(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
     }
-  }
-
-  useEffect(() => {
     loadCars();
+    // forma de limpeza
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      return true;
-    });
-  }, []);
+  //impedir que o usuario volta para tela de splay
+  // useEffect(() => {
+  //   BackHandler.addEventListener("hardwareBackPress", () => {
+  //     return true;
+  //   });
+  // }, []);
 
   return (
     <Container>
@@ -116,7 +124,7 @@ export const Home: React.FC = () => {
         />
       )}
 
-      <PanGestureHandler onGestureEvent={onGestureHandler}>
+      {/* <PanGestureHandler onGestureEvent={onGestureHandler}>
         <Animated.View
           style={[
             myCarsButtonStyle,
@@ -139,7 +147,7 @@ export const Home: React.FC = () => {
             />
           </ButtonAnimated>
         </Animated.View>
-      </PanGestureHandler>
+      </PanGestureHandler> */}
     </Container>
   );
 };

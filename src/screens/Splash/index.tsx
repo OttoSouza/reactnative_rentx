@@ -46,7 +46,7 @@ export const Splash: React.FC = () => {
   });
 
   function startApp() {
-    navigate("Home");
+    navigate("SignIn");
   }
   useEffect(() => {
     splashAnimation.value = withTiming(50, { duration: 1000 }, () => {

@@ -15,6 +15,7 @@ import { Bullet } from "../../../components/Bullet";
 import { Button } from "../../../components/Button";
 import { PasswordInput } from "../../../components/PasswordInput/index";
 import { useTheme } from "styled-components";
+import { api } from "../../../services/api";
 import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -41,7 +42,7 @@ export const SignUpSecondStep: React.FC = () => {
     goBack();
   }
 
-  function handleRegister() {
+  async function handleRegister() {
     if (!password || !confirmPassword) {
       return Alert.alert("Informe a senha e a confirmação");
     }
@@ -49,12 +50,24 @@ export const SignUpSecondStep: React.FC = () => {
     if (password != confirmPassword) {
       return Alert.alert("As senhas nao sao iguais");
     }
-    //Enviar para API e cadastrar
-    navigate("Confirmation", {
-      nextScreenRoute: "SignIn",
-      title: "Conta criada",
-      message: `Agora é so fazer login\n e aproveitar`,
-    });
+
+    await api
+      .post("/users", {
+        name: user.name,
+        email: user.email,
+        driver_license: user.driverLicense,
+        password,
+      })
+      .then(() => {
+        navigate("Confirmation", {
+          nextScreenRoute: "SignIn",
+          title: "Conta criada",
+          message: `Agora é so fazer login\n e aproveitar`,
+        });
+      }).catch((error) => {
+        console.log(error)
+        Alert.alert("Opa,","Nao foi possivel cadastrar")
+      });
   }
 
   return (

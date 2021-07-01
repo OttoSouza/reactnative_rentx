@@ -13,16 +13,17 @@ import { SignUpSecondStep } from '../screens/SignUp/SecondStep/index';
 
 const { Navigator, Screen } = createStackNavigator();
 
-export function StackRoutes() {
+export function AppStackRoutes() {
   return (
-    <Navigator headerMode="none" initialRouteName="SignIn">
+    <Navigator headerMode="none" initialRouteName="Home">
       {/* <Screen name="Splash" component={Splash} /> */}
-      <Screen name="SignIn" component={SignIn} />
+      <Screen name="Home" component={Home} />
+      {/* <Screen name="SignIn" component={SignIn} />
       <Screen name="SignUpFirstStep" component={FirstStep} />
       <Screen name="SignUpSecondStep" component={SignUpSecondStep} />
       <Screen name="Home" component={Home} options={{
         gestureEnabled: false
-      }}/>
+      }}/> */}
       <Screen name="CarDetails" component={CarDetails} />
       <Screen name="MyCars" component={MyCars} />
       <Screen name="Scheduling" component={Scheduling} />
